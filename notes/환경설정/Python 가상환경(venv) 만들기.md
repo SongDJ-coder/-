@@ -81,4 +81,44 @@ python ch01_python\check_env.py
 - 행렬 계산 결과가 출력된다.
 - `ch01_python\check_env.png`에 sin·cos 그래프가 저장된다.
 
+## 8. 직접 해 보며 겪은 실수 (2026-11-11)
+### `python -m venv`로 만들었더니 3.14가 됐다
+- `python`을 그냥 치면 컴퓨터 기본 파이썬(3.14)이 실행된다.
+- 원하는 버전은 반드시 `py -3.13`처럼 직접 지정한다.
+- `py -0p` 목록의 `*` 표시가 기본 버전이다. 내 PC는 3.14t(실험용)가 기본이다.
+- 어떤 파이썬이 실행됐는지는 에러 메시지 맨 앞의 경로나 아래 파일로 확인한다.
+  ```powershell
+  cat .venv\pyvenv.cfg   # version = 3.13.x 인지 확인
+  ```
+
+### 오타: `venu`
+```
+No module named venu
+```
+모듈 이름을 잘못 쳤다는 뜻이다. `venv`가 맞다.
+
+### 가상환경을 다시 만들기
+```powershell
+deactivate                          # 1. 켜져 있으면 먼저 나가기
+py -3.13 -m venv --clear .venv      # 2. --clear: 기존 내용을 비우고 새로 만들기
+```
+- 켜진 상태로 다시 만들면 터미널이 지워진 환경을 가리키는 꼬인 상태가 될 수 있다.
+- `--clear` 대신 `Remove-Item -Recurse -Force .venv`로 지워도 된다. 이 명령은 휴지통을 거치지 않으니 주의한다.
+
+### `pip install -r requirements.txt`를 했더니 `Requirement already satisfied`가 나왔다
+- 이미 다 설치돼 있다는 뜻이다. 정상이다.
+- 이 명령은 **새 PC나 새 가상환경**에서 쓰는 용도다.
+
+### 설치 중 `Using cached ...`
+- 예전에 받아 둔 파일을 재사용한다는 뜻이다. 정상이다.
+
+### 노트북에서 커널이 안 잡혔다
+- 터미널에서 가상환경을 켠 것과 노트북 커널은 **따로** 정해진다.
+- 노트북에서 직접 골라 줘야 한다: `Select Kernel` → `Python Environments...` → `.venv (3.13.x)`
+- 자세한 내용은 [[VS Code 설정]] 참고.
+
+## 9. 처음부터 다시 만들기 (2026-11-11 연습)
+`C:\Deeplerning`을 완전히 비우고 1~7번을 직접 다시 했다. 장별 폴더(`ch01_python` ~ `ch08_deep`, `common`, `dataset`)와 각 장의 빈 노트북(`ch01.ipynb` 등)을 만들었다.
+- `.vscode\settings.json`, `.gitignore`, Git 연결은 아직 다시 하지 않았다.
+
 관련: [[실습 폴더 구조]], [[VS Code 설정]]
