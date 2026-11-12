@@ -38,6 +38,45 @@ git commit -m "환경 설정과 폴더 구조"                        # 기록 �
 git push -u origin main                                    # 올리기 (-u: 다음부터 git push만 써도 됨)
 ```
 
+## Git이 동작하는 방식 (세 공간 + GitHub)
+```
+① 작업 폴더 ──git add──▶ ② 스테이징 ──git commit──▶ ③ .git (내 PC) ──git push──▶ ④ GitHub
+                                                                  ◀──git fetch/pull──
+```
+- `.git` 폴더는 파일 복사본이 아니라 **사진첩**이다. 커밋할 때만 그 순간 상태를 압축해서 저장한다.
+- 바뀌지 않은 파일은 다시 저장하지 않는다.
+- `.gitignore`에 적은 파일은 Git이 아예 보지 않는다.
+- Git은 **빈 폴더를 추적하지 않는다.** 그래서 빈 폴더에는 `.gitkeep`이라는 빈 파일을 넣어 둔다.
+- `git` 명령은 가상환경이 켜져 있든 꺼져 있든 상관없다. 파이썬과 별개의 프로그램이다.
+
+## 이미 커밋이 있는 레포에 다시 연결하기 (2026-11-11에 직접 함)
+로컬 폴더를 비우고 새로 만들었는데 GitHub에는 예전 커밋이 남아 있는 상황이다. 이때 그냥 push하면 기록이 이어지지 않아서 거절된다.
+```powershell
+git init -b main
+git remote add origin https://github.com/SongDJ-coder/-.git
+git fetch origin            # GitHub 기록만 받아 옴 (내 파일은 안 바뀜)
+git reset origin/main       # 내 main을 GitHub 마지막 커밋에 맞춤 (파일은 그대로) ※ --hard 금지
+git status                  # deleted / modified / untracked 확인
+git restore 살릴파일 ...     # 지워진 파일 중 살릴 것 되살리기 (커밋 전에만 가능)
+git add .
+git commit -m "메시지"
+git push -u origin main     # -u: 처음 한 번만. 이후엔 git push
+```
+- `git status`의 `deleted`는 마지막 커밋에는 있는데 지금 폴더에는 없는 파일이다.
+- `modified`는 내용이 바뀐 파일, `Untracked`는 Git이 처음 보는 파일이다.
+- 내가 한 실수: `origin/main`을 `origin.main`으로 쳐서 `ambiguous argument` 에러가 났다. `Tab` 자동 완성을 쓰면 오타를 줄일 수 있다.
+- `No commits yet`이 나오면 아직 reset이 안 된 상태다.
+
+## 한글 파일 이름이 `\355\231...`로 보일 때
+```powershell
+git config --global core.quotepath false
+```
+
+## PowerShell에서 한글이 깨질 때 (`cat`)
+- 파일은 UTF-8로 정상 저장돼 있다. PowerShell 5.1이 CP949로 잘못 읽어서 깨져 보이는 것이다.
+- `cat 파일 -Encoding utf8`로 읽으면 제대로 보인다.
+- 매번 붙이기 싫으면 `$PROFILE`에 `$PSDefaultParameterValues['*:Encoding'] = 'utf8'`을 추가한다.
+
 ## .gitignore — 올리지 않을 파일 목록
 ```
 .venv/            가상환경 (requirements.txt로 다시 만들 수 있음)
