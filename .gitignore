@@ -9,3 +9,6 @@ __pycache__/
 dataset/*.gz
 dataset/*.pkl
 
+# 내려받은 자료 (책 저장소 등)
+book_source/
+
