@@ -83,6 +83,7 @@ git config --global core.quotepath false
 __pycache__/      파이썬 캐시
 dataset/*.gz      MNIST 데이터 (용량 큼)
 dataset/*.pkl
+book_source/      GitHub에서 받은 자료 (책 저장소 등)
 .obsidian/        Obsidian 설정
 ```
 
@@ -108,6 +109,43 @@ git push                       # 5. GitHub에 올리기
 | `git diff` | 바뀐 내용 자세히 보기 |
 | `git pull` | GitHub의 최신 내용 받기 (다른 PC에서 작업했을 때) |
 | `git restore 파일` | 커밋 안 한 변경 되돌리기 (주의: 되돌린 내용은 사라짐) |
+
+## 책 저장소에서 파일 받아 오기 (2026-11-13)
+`clone`은 GitHub 저장소를 **통째로 내 PC에 복사**한다. `push`와 방향이 반대다.
+```
+push  :  내 PC   ──→  GitHub   (내 걸 올리기)
+clone :  GitHub  ──→  내 PC    (남의 걸 받아오기)
+```
+
+**① `.gitignore`에 먼저 추가** (저장소 안에 저장소가 등록돼서 꼬이는 걸 막기 위해, clone **전에**)
+```
+book_source/
+```
+
+**② `book_source` 폴더 안에 받기** (`book_source`는 받은 자료를 모아 두는 상자)
+```powershell
+cd C:\Deeplerning
+mkdir book_source
+cd book_source
+git clone https://github.com/WegraLee/deep-learning-from-scratch.git
+```
+**③ 확인**: `cd C:\Deeplerning` → `git status`에 `book_source/`가 **안 보이면** 무시가 잘 된 것.
+
+**④ 필요한 파일만 내 폴더로 복사** (`C:\Deeplerning`에서)
+```powershell
+cp book_source\deep-learning-from-scratch\dataset\mnist.py dataset\
+cp book_source\deep-learning-from-scratch\dataset\*.gz dataset\
+cp book_source\deep-learning-from-scratch\ch03\sample_weight.pkl ch03_neural_network\
+```
+| 부분 | 뜻 |
+|:-|:-|
+| `cp 원본 목적지` | 복사 (원본은 그대로 남음). PowerShell에서는 `Copy-Item`의 줄임말 |
+| 끝의 `\` | "이건 폴더야" |
+| `*.gz` | 와일드카드. ".gz로 끝나는 파일 전부" |
+| 경로 | **지금 있는 폴더 기준**. 실행 전에 프롬프트(`PS C:\Deeplerning>`) 확인 |
+
+**⑤ 확인**: `ls dataset`, `ls ch03_neural_network`로 파일이 들어왔는지 본다.
+- `.gz`, `mnist.pkl`은 `.gitignore`의 `dataset/*.gz`, `dataset/*.pkl` 덕분에 GitHub에 안 올라간다.
 
 ## 다른 PC에서 받아서 시작하기
 ```powershell
